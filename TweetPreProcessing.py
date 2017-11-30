@@ -3,8 +3,12 @@ import re
 import operator
 import configparser
 from collections import Counter
-#import nltk
+import nltk
 #nltk.download('punkt')
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+from nltk import bigrams
+import string
 #from nltk.tokenize import word_tokenize
 
 config = configparser.ConfigParser()
@@ -29,9 +33,12 @@ regex_str = [
     r'(?:[\w_]+)', # other words
     r'(?:\S)' # anything else
 ]
-    
+
 tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+
+punctuation = list(string.punctuation)
+stop = stopwords.words('english') + punctuation + ['rt', 'via']
  
 def tokenize(s):
     return tokens_re.findall(s)
@@ -44,13 +51,30 @@ def preprocess(s, lowercase=False):
 
 fname = config['DEFAULT']['tweet_file']
 with open(fname, 'r') as f:
+    count_all = Counter()
     for line in f:
         tweet = json.loads(line) # load it as Python dict
-        #print(json.dumps(tweet, indent=4)) # pretty-print
-        tokens = preprocess(tweet['text'])
-        print(tokens)
-        #do_something_else(tokens)
- 
-#tweet = 'RT @marcobonzanini: just an example! :D http://example.com #NLP'
-#print(preprocess(tweet))
+        # Create a list with all the terms
+        terms_all = [term for term in preprocess(tweet['text'])]
+        # Count terms only once, equivalent to Document Frequency
+        terms_single = set(terms_all)
+        # Count hashtags only
+        terms_hash = [term for term in preprocess(tweet['text']) 
+              if term.startswith('#')]
+        # Count terms only (no hashtags, no mentions)
+        terms_only = [term for term in preprocess(tweet['text']) 
+              if term not in stop and
+              not term.startswith(('#', '@'))] 
+              # mind the ((double brackets))
+              # startswith() takes a tuple (not a list) if 
+              # we pass a list of inputs
+        terms_stop = [term for term in preprocess(tweet['text']) if term not in stop]
+        # Update the Counter
+        count_all.update(terms_stop)
+        # The bigrams() function from NLTK will take a list of tokens 
+        # and produce a list of tuples using adjacent tokens
+        terms_bigram = bigrams(terms_stop) # have to cast bigram as a list
+        print(list(terms_bigram)) 
+    print(count_all.most_common(5))
+
 
