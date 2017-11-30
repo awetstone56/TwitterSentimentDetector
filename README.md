@@ -1,0 +1,2 @@
+# TwitterSentimentDetector
+Artificial Intelligence Project
