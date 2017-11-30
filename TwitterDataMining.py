@@ -8,7 +8,8 @@ from tweepy import OAuthHandler
 config = configparser.ConfigParser()
 config.read('TwitterSentimentDetector.ini')
 
-file = open("Tweets.json", "w") # call file what ever you need to
+fname = config['DEFAULT']['tweet_file']
+file = open(fname, "w") # call file what ever you need to
 # this method writes a tweet to a file
 def process_or_store(tweet):
     file.write(json.dumps(tweet) + "\n")

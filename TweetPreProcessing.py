@@ -1,8 +1,14 @@
 import json
 import re
+import operator
+import configparser
+from collections import Counter
 #import nltk
 #nltk.download('punkt')
 #from nltk.tokenize import word_tokenize
+
+config = configparser.ConfigParser()
+config.read('TwitterSentimentDetector.ini')
 
 emoticons_str = r"""
     (?:
@@ -36,9 +42,9 @@ def preprocess(s, lowercase=False):
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
 
-with open('Tweets.json', 'r') as f:
+fname = config['DEFAULT']['tweet_file']
+with open(fname, 'r') as f:
     for line in f:
-        #line = f.readline() # read only the first tweet/line
         tweet = json.loads(line) # load it as Python dict
         #print(json.dumps(tweet, indent=4)) # pretty-print
         tokens = preprocess(tweet['text'])
