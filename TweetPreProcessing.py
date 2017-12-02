@@ -3,6 +3,7 @@ import re
 import operator
 import configparser
 from collections import Counter
+from collections import defaultdict
 import nltk
 #nltk.download('punkt')
 nltk.download('stopwords')
@@ -50,6 +51,9 @@ def preprocess(s, lowercase=False):
     return tokens
 
 fname = config['DEFAULT']['tweet_file']
+# co-occurence matrix
+com = defaultdict(lambda : defaultdict(int))
+
 with open(fname, 'r') as f:
     count_all = Counter()
     for line in f:
@@ -74,7 +78,13 @@ with open(fname, 'r') as f:
         # The bigrams() function from NLTK will take a list of tokens 
         # and produce a list of tuples using adjacent tokens
         terms_bigram = bigrams(terms_stop) # have to cast bigram as a list
-        print(list(terms_bigram)) 
+        #print(list(terms_bigram)) 
+
+        # Build co-occurrence matrix
+        for i in range(len(terms_only)-1):            
+            for j in range(i+1, len(terms_only)):
+                w1, w2 = sorted([terms_only[i], terms_only[j]])                
+                if w1 != w2:
+                    com[w1][w2] += 1
+                    
     print(count_all.most_common(5))
-
-
