@@ -40,7 +40,9 @@ tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
 
 punctuation = list(string.punctuation)
-stop = stopwords.words('english') + punctuation + ['rt', 'via']
+numbers = list(string.digits)
+articles = list(["a", "A", "The", "the"])
+stop = stopwords.words('english') + punctuation + articles + numbers + ['2017', '2018'] + ['rt','RT', "we're", 'via']
  
 def tokenize(s):
     return tokens_re.findall(s)
@@ -146,3 +148,9 @@ top_neg = semantic_sorted[-10:]
  
 print(top_pos)
 print(top_neg)
+# Trump Tweets
+#print("Jerusalem: ", semantic_orientation["Jerusalem"])
+#print("Trump: ", semantic_orientation["Trump"])
+#print("US: ", semantic_orientation["US"])
+# Happy Tweets
+
