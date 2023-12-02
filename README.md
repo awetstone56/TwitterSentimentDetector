@@ -1,7 +1,5 @@
 # TwitterSentimentDetector
 
-## Artificial Intelligence Project
-
 ###### Introduction
 	This project aims to allow a computer program to predict the sentiment – positive or negative – of Twitter using Machine Learning techniques. Sentiment is defined as an attitude, emotion, or feeling. As Twitter is filled with “tweets” authored by numerous individuals “tweeting” about a variety of events, the program’s job is to give a probability of how those individuals feel about certain things. By analyzing these results, we can generally determine how Twitter users feel about a recent event, a particular person, and more. 
         
